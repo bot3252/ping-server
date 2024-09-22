@@ -1,0 +1,4 @@
+<mailSession description="" from="" host="127.0.0.1" jndiName="" mailSessionID="" transportProtocol="smtp" user="ping.chat.noreply@gmail.com" password="ylro lpre xuls zyga">
+    <property name="mail.smtp.auth" value="true"/>
+    <property name="mail.smtp.port" value="25"/>
+</mailSession>
