@@ -6,6 +6,8 @@ import com.bot.ping_server.entity.FirebaseToken;
 import com.bot.ping_server.entity.NotificationMessage;
 import com.bot.ping_server.repository.WsRepository;
 import com.bot.ping_server.service.FirebaseService;
+import com.bot.ping_server.utils.Log;
+import com.bot.ping_server.utils.Logger;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -46,7 +48,20 @@ public class PingServerApplication implements WebServerFactoryCustomizer<TomcatS
     @Lazy
     public static WsRepository wsRepository = new WsRepository();
 
-	@Bean
+	@Getter
+    static Connection connection;
+
+    {
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://"+config.getBdIp()+":"+config.getBdPort()+"/"+config.getBdName()+"?autoReconnect=true", config.getUserName(), config.getBdPassword());
+			Log log = new Log("BD CONNECT");
+			Logger.logEvent(log, "open new connect");
+		} catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Bean
 	FirebaseMessaging firebaseMessaging() throws IOException {
 		FileInputStream serviceAccount = new FileInputStream(config.getPathData()+"//ping-7731d-firebase-adminsdk-cffpt-c0c0bb89e3.json");
 		FirebaseOptions options = new FirebaseOptions.Builder()
@@ -72,6 +87,8 @@ public class PingServerApplication implements WebServerFactoryCustomizer<TomcatS
 		JSONObject jsonObject = new JSONObject(string);
 		return new Config(jsonObject.getString("path_data"),jsonObject.getString("ip_server"), jsonObject.getString("port_server"), jsonObject.getString("bd_ip"),jsonObject.getString("bd_port"),  jsonObject.getString("bd_name"), jsonObject.getString("bd_user_name"), jsonObject.getString("bd_password"));
 	}
+
+
 	@SneakyThrows
 	@Override
 	public void customize(TomcatServletWebServerFactory factory) {
@@ -81,11 +98,4 @@ public class PingServerApplication implements WebServerFactoryCustomizer<TomcatS
 		}
 	}
 
-	public static Connection getConnection (){
-		try {
-				return DriverManager.getConnection("jdbc:mysql://"+config.getBdIp()+":"+config.getBdPort()+"/"+config.getBdName()+"?autoReconnect=true", config.getUserName(), config.getBdPassword());
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
 }
