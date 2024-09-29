@@ -88,6 +88,10 @@ public class MessageController {
                 }
             }
 
+            line.close();
+            statement.close();
+            connection.close();
+
             Logger.logEvent(log, "DONE! messages:"+messages.size());
             return messages;
         }
@@ -145,6 +149,11 @@ public class MessageController {
                 preparedStatement.setString(6, Message.MESSAGE_STATUS_SENT);
 
                 int i = preparedStatement.executeUpdate();
+
+                preparedStatement.close();
+                connection.close();
+
+                if(connection.isClosed());
 
                 if (webSocketConnectInfoTo != null){
                     JSONObject jsonObject = Parser.parseMessageToJson(message);
@@ -204,6 +213,10 @@ public class MessageController {
                     messages.add(message);
                 }
             }
+
+            line.close();
+            preparedStatement.close();
+            connection.close();
 
             Logger.logEvent(log, "DONE! messages:"+messages.size());
             return messages;

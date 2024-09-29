@@ -48,18 +48,7 @@ public class PingServerApplication implements WebServerFactoryCustomizer<TomcatS
     @Lazy
     public static WsRepository wsRepository = new WsRepository();
 
-	@Getter
     static Connection connection;
-
-    {
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://"+config.getBdIp()+":"+config.getBdPort()+"/"+config.getBdName()+"?autoReconnect=true", config.getUserName(), config.getBdPassword());
-			Log log = new Log("BD CONNECT");
-			Logger.logEvent(log, "open new connect");
-		} catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Bean
 	FirebaseMessaging firebaseMessaging() throws IOException {
@@ -72,9 +61,10 @@ public class PingServerApplication implements WebServerFactoryCustomizer<TomcatS
 		return FirebaseMessaging.getInstance(app);
 	}
 
-	public static void main(String[] args) throws FileNotFoundException, JSONException {
+	public static void main(String[] args) throws FileNotFoundException, JSONException, SQLException {
 		config = updateConfig(args[0]);
 		SpringApplication.run(PingServerApplication.class, args);
+	//	connection=DriverManager.getConnection("jdbc:mysql://"+config.getBdIp()+":"+config.getBdPort()+"/"+config.getBdName()+"?autoReconnect=true", config.getUserName(), config.getBdPassword());
     }
 
 	static Config updateConfig(String path) throws FileNotFoundException, JSONException {
@@ -98,4 +88,14 @@ public class PingServerApplication implements WebServerFactoryCustomizer<TomcatS
 		}
 	}
 
+	public static Connection getConnection() {
+        try {
+            connection=DriverManager.getConnection("jdbc:mysql://"+config.getBdIp()+":"+config.getBdPort()+"/"+config.getBdName()/*+"?autoReconnect=true"*/, config.getUserName(), config.getBdPassword());
+        	return connection;
+		} catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 }

@@ -35,6 +35,11 @@ public class LoginService {
             nickname = line.getString("nickname");
             passwordHash = line.getString("password_hash");
         }
+
+        line.close();
+        preparedStatement.close();
+        connection.close();
+
         if(Objects.equals(passwordHash, hashingPassword(password))) {
             MyUser fullUser = new MyUser();
             fullUser.setUuid(uuid);

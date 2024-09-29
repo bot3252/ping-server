@@ -56,7 +56,7 @@ public class UpdateController {
         Log log = new Log("checkVersionClient");
         Logger.logEvent(log, "Starting....");
         Logger.logEvent(log, "version: "+version);
-        return !Objects.equals(version, aboutUpdate.get("version"));
+        return Float.parseFloat(aboutUpdate.get("version"))>Float.parseFloat(version);
     }
 
     @ResponseBody

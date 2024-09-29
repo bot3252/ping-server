@@ -176,6 +176,10 @@ public class UserController {
 
             preparedStatement.executeUpdate();
 
+
+            preparedStatement.close();
+            connection.close();
+
             Logger.logEvent(log, "DONE! User " + myUser);
         }
         Logger.logError(log, "user " + user);
@@ -201,6 +205,11 @@ public class UserController {
             String uuid = line.getString("uuid");
             uuids.add(uuid);
         }
+
+        line.close();
+        statement.close();
+        connection.close();
+
 
         for (int i = 0; i <= uuids.size() - 1; i++) {
             User user = UserService.getUserByUuid(uuids.get(i));

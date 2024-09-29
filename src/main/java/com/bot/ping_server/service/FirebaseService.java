@@ -41,6 +41,10 @@ public class FirebaseService {
 
             tokens.add(firebaseToken);
         }
+
+        line.close();
+        preparedStatement.close();
+        connection.close();
         return tokens;
     }
 
@@ -51,6 +55,9 @@ public class FirebaseService {
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM "+bd_name+".firebase_token WHERE token=?");
         preparedStatement.setString(1, token);
         int result = preparedStatement.executeUpdate();
+
+        preparedStatement.close();
+        connection.close();
     }
 
     public void deleteTokenByUuid(String uuid) throws SQLException {
@@ -60,6 +67,9 @@ public class FirebaseService {
         preparedStatement.setString(1, uuid);
         int result = preparedStatement.executeUpdate();
 
+        preparedStatement.close();
+        connection.close();
+
     }
 
     public void deleteTokenByIdDevice(String id) throws SQLException {
@@ -68,6 +78,9 @@ public class FirebaseService {
         PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM "+bd_name+".firebase_token WHERE id_device = ?");
         preparedStatement.setString(1, id);
         int result = preparedStatement.executeUpdate();
+
+        preparedStatement.close();
+        connection.close();
     }
 
     public void setToken(String uuid, String token, String idDevice) throws SQLException {
@@ -84,6 +97,9 @@ public class FirebaseService {
         preparedStatement.setString(4, idDevice);
 
         int i = preparedStatement.executeUpdate();
+
+        preparedStatement.close();
+        connection.close();
     }
 
     public void sendNotificationByToken(NotificationMessage notificationMessage) {

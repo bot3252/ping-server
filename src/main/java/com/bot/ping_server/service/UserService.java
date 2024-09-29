@@ -38,11 +38,17 @@ public class UserService {
             nickname = line.getString("nickname");
         }
 
+        line.close();
+        preparedStatement.close();
+        connection.close();
+
         fullUser.setUuid(uuid);
         fullUser.setName(name);
         fullUser.setEmail(email);
         fullUser.setDescription(description);
         fullUser.setNickname(nickname);
+
+
 
         return fullUser;
     }
@@ -58,6 +64,11 @@ public class UserService {
         while (line.next()) {
             password = line.getString("password_hash");
         }
+
+        line.close();
+        preparedStatement.close();
+        connection.close();
+
         return !(password.isEmpty());
     }
 
@@ -77,6 +88,11 @@ public class UserService {
         while (line.next()) {
             uuid = line.getString("uuid");
         }
+
+        line.close();
+        preparedStatement.close();
+        connection.close();
+
         return uuid;
     }
 
@@ -94,6 +110,11 @@ public class UserService {
         while (line.next()) {
             uuid = line.getString("user_uuid_1");
         }
+
+        line.close();
+        preparedStatement.close();
+        connection.close();
+
         return !(uuid ==null);
     }
 
@@ -107,6 +128,7 @@ public class UserService {
         preparedStatement.setString(2,uuid);
         ResultSet line = preparedStatement.executeQuery();
 
+
         while (line.next()) {
             String uuid2 = line.getString("user_uuid_2");
             if (uuid.equals(uuid2))
@@ -114,6 +136,10 @@ public class UserService {
             User user = getUserByUuid(uuid2);
             allContacts.add(user);
         }
+
+        line.close();
+        preparedStatement.close();
+        connection.close();
 
         return allContacts;
     }
